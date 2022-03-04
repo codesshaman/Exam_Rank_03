@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <math.h>
-int W, H;			// Ширина и высота
-char BG, **TAB;		// и сама таблица
+int w, h;
+char bg, **tab;
 
 typedef struct draw {
 	char t, c;
@@ -18,8 +18,8 @@ int error_msg(FILE *fd, int err){
 		write(1, "Error rgument\n", 16);
 	}
 	else{
-		for(int i = 0; i < H; i++){
-			write(1, TAB[i], W);
+		for(int i = 0; i < h; i++){
+			write(1, tab[i], w);
 			write(1, "\n", 1);
 		}
 	}
@@ -37,12 +37,12 @@ int main(int ac, char **av)
 	 if (ac != 2)
 		return (error_msg(fd,1));
 	if ((fd = fopen(av[1],"r"))){
-		if ((res = fscanf(fd, "%d %d %c", &W,&H,&BG)) == 3){
-			if (W > 0 && W <= 300 && H >0 && H<=300){
-				TAB = malloc(H * sizeof(char *));
-				for (int i = 0;i<H; i++){
-					TAB[i] = malloc(W * sizeof(char));
-					memset(TAB[i],BG,W);
+		if ((res = fscanf(fd, "%d %d %c", &w,&h,&bg)) == 3){
+			if (w > 0 && w <= 300 && h > 0 && h <= 300){
+				tab = malloc(h * sizeof(char *));
+				for (int i = 0; i < h; i++){
+					tab[i] = malloc(w * sizeof(char));
+					memset(tab[i], bg, w);
 				}
 				while (1){
 					res = fscanf(fd, "\n%c %f %f %f %c",&el.t,&el.x, &el.y, &el.r, &el.c);
@@ -50,14 +50,14 @@ int main(int ac, char **av)
 						return (error_msg(fd,0));
 					else if (res != 5 || el.r <= 0 || (el.t != 'c' && el.t != 'C'))
 						break;
-					for (int line = 0;line < H; line ++){
-						for (int col = 0; col < W; col++){
+					for (int line = 0;line < h; line ++){
+						for (int col = 0; col < w; col++){
 							sqr = sqrtf((col - el.x)*(col -el.x) + (line -el.y)*(line -el.y));
 							if (sqr<el.r){
 								if (el.t == 'c' && sqr+1>el.r)
-									TAB[line][col] = el.c;
+									tab[line][col] = el.c;
 								else if (el.t == 'C')
-									TAB[line][col] = el.c;
+									tab[line][col] = el.c;
 							}
 						}
 					}
