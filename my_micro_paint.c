@@ -1,14 +1,12 @@
-#include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <unistd.h>
 #include <math.h>
-#include <string.h>
-
 int w, h;
 char bg, **tab;
 
-typedef struct draw
-{
+typedef struct draw {
 	char t, c;
 	float x, y, w, h;
 }   Draw;
@@ -38,6 +36,7 @@ int in_rectangle(float x, float y, Draw *el)
 		return (2);
 	return (1);
 }
+
 int main (int ac, char **av)
 {
 	FILE *fd;
