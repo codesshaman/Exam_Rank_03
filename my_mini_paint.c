@@ -15,7 +15,7 @@ int error_msg(FILE *fd, int err){
 	if (err == 2)
 		write(1, "Error: Operation file corrupted\n", 32);
 	else if (err == 1)
-		write(1, "Error rgument\n", 16);
+		write(1, "Error argument\n", 16);
 	else{
 		for(int i = 0; i < h; i++){
 			write(1, tab[i], w);
