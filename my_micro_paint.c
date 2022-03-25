@@ -1,11 +1,11 @@
-#include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <string.h>
+#include <stdio.h>
 #include <stdbool.h>
 #define ARGS_ERR "Error: argument"
 #define FILE_ERR "Error: Operation file corrupted"
-char **tab, c, type;;
+char **tab, c, type;
 int w, h, res;
 float xs, ys, xw, yh;
 FILE *fd;
@@ -38,7 +38,7 @@ int main(int ac, char **av) {
 		return (putstr(FILE_ERR), 1);
 	res = fscanf(fd, "%d %d %c\n", &w, &h, &c);
 	if (res != 3 || w <= 0 || h <= 0 || w > 300 || h > 300)
-		return ( putstr(FILE_ERR), 1);
+		return (putstr(FILE_ERR), 1);
 	tab = calloc(h, sizeof(char *));
 	for (int i = 0; i < h; i++) {
 		tab[i] = calloc(w + 1, 1);
@@ -49,4 +49,5 @@ int main(int ac, char **av) {
 			return (putstr(FILE_ERR), 1);
 	for (int i = 0; i < h; i++)
 		putstr(tab[i]);
+	fclose(fd);
 }

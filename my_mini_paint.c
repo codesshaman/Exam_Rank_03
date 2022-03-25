@@ -1,67 +1,58 @@
 #include <string.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <math.h>
-int w, h;
-char bg, **tab;
+#define ARGS_ERR "Error: argument"
+#define FILE_ERR "Error: Operation file corrupted"
+char **tab, c, type;
+int w, h, res;
+float xs, ys, r;
+FILE *fd;
 
-typedef struct draw {
-	char t, c;
-	float x, y, r;
-}   Draw;
-
-int error_msg(FILE *fd, int err){
-	if (err == 2)
-		write(1, "Error: Operation file corrupted\n", 32);
-	else if (err == 1)
-		write(1, "Error argument\n", 16);
-	else
-		for(int i = 0; i < h; i++){
-			write(1, tab[i], w);
-			write(1, "\n", 1);
-		}
-	if (fd)
-		fclose(fd);
-	return (err);
+void putstr(char *s) {
+	while (*s)
+		write(1, s++, 1);
+	write(1, "\n", 1);
 }
 
-int main(int ac, char **av)
-{
-	 Draw el;
-	 FILE *fd = NULL;
-	 float sqr;
-	 int res;
-	 if (ac != 2)
-		return (error_msg(fd,1));
-	if ((fd = fopen(av[1],"r"))){
-		if ((res = fscanf(fd, "%d %d %c", &w,&h,&bg)) == 3){
-			if (w > 0 && w <= 300 && h > 0 && h <= 300){
-				tab = malloc(h * sizeof(char *));
-				for (int i = 0; i < h; i++){
-					tab[i] = malloc(w * sizeof(char));
-					memset(tab[i], bg, w);
-				}
-				while (1){
-					res = fscanf(fd, "\n%c %f %f %f %c",&el.t,&el.x, &el.y, &el.r, &el.c);
-					if (res == -1)
-						return (error_msg(fd,0));
-					else if (res != 5 || el.r <= 0 || (el.t != 'c' && el.t != 'C'))
-						break;
-					for (int line = 0;line < h; line ++){
-						for (int col = 0; col < w; col++){
-							sqr = sqrtf((col - el.x)*(col -el.x) + (line -el.y)*(line -el.y));
-							if (sqr<el.r){
-								if (el.t == 'c' && sqr+1>el.r)
-									tab[line][col] = el.c;
-								else if (el.t == 'C')
-									tab[line][col] = el.c;
-							}
-						}
-					}
-				}
+int draw(void) {
+	if ((type != 'c' && type != 'C') || r <= 0)
+		return -1;
+	for (int y = 0; y < h; y++) {
+		for (int x = 0; x < w; x++) {
+			if (type == 'C'){
+				if (sqrtf((x - xs) * (x - xs) + (y - ys) * (y - ys)) <= r)
+					tab[y][x] = c;
+			}
+			if (type == 'c'){
+				if (sqrtf((x - xs) * (x - xs) + (y - ys) * (y - ys)) <= r
+					&& r - sqrtf((x - xs) * (x - xs) + (y - ys) * (y - ys)) < 1)
+					tab[y][x] = c;
 			}
 		}
 	}
-	return (error_msg(fd,2));
+	return 0;
+}
+
+int main(int ac, char **av) {
+	if (ac != 2)
+		return (putstr(ARGS_ERR), 1);
+	fd = fopen(av[1], "r");
+	if (!fd)
+		return (putstr(FILE_ERR), 1);
+	res = fscanf(fd, "%d %d %c\n", &w, &h, &c);
+	if (res != 3 || w <= 0 || h <= 0 || w > 300 || h > 300)
+		return(putstr(FILE_ERR), 1);
+	tab = calloc(h, sizeof(char *));
+	for (int i = 0; i < h; i++) {
+		tab[i] = calloc(w + 1, 1);
+		memset(tab[i], c, w);
+	}
+	while ((res = fscanf(fd, "%c %f %f %f %c\n", &type, &xs, &ys, &r, &c)) != -1)
+		if (res != 5 || draw() == -1)
+			return (putstr(FILE_ERR), 1);
+	for (int i = 0; i < h; i++)
+		putstr(tab[i]);
+	fclose(fd);
 }
