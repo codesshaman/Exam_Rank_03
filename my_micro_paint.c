@@ -19,12 +19,12 @@ void putstr(char *s) {
 int draw(void) {
 	if ((type != 'r' && type != 'R') || xw <= 0 || yh <= 0)
 		return -1;
-	for (int y = 0; y < h; y++) {
-		for (int x = 0; x < w; x++) {
+	for (int x = 0; x < h; x++) {
+		for (int y = 0; y < w; y++) {
 			bool cond1 = !(x < xs || y < ys || y > (ys + yh) || x > (xs + xw));
 			bool cond2 = x - xs < 1 || y - ys < 1 || (ys + yh) - y < 1 || (xs + xw) - x < 1;
 			if ((cond1) && ((cond2 && type == 'r')||type == 'R'))
-					tab[y][x] = c;
+					tab[x][y] = c;
 		}
 	}
 	return 0;

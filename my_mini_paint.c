@@ -19,16 +19,16 @@ void putstr(char *s) {
 int draw(void) {
 	if ((type != 'c' && type != 'C') || r <= 0)
 		return -1;
-	for (int y = 0; y < h; y++) {
-		for (int x = 0; x < w; x++) {
+	for (int x = 0; x < h; x++) {
+		for (int y = 0; y < w; y++) {
 			if (type == 'C'){
 				if (sqrtf((x - xs) * (x - xs) + (y - ys) * (y - ys)) <= r)
-					tab[y][x] = c;
+					tab[x][y] = c;
 			}
 			if (type == 'c'){
 				if (sqrtf((x - xs) * (x - xs) + (y - ys) * (y - ys)) <= r
 					&& r - sqrtf((x - xs) * (x - xs) + (y - ys) * (y - ys)) < 1)
-					tab[y][x] = c;
+					tab[x][y] = c;
 			}
 		}
 	}
