@@ -23,8 +23,8 @@ int draw(void) {
 		for (int y = 0; y < w; y++) {
 			bool cond1 = !(x < xs || (xs + xw) < x || y < ys  || (ys + yh) < y);
 			bool cond2 = x - xs < 1 || (xs + xw) - x < 1 || y - ys < 1 || (ys + yh) - y < 1;
-			if ((cond1) && ((cond2 && type == 'r')||type == 'R'))
-					tab[x][y] = c;
+			if ((cond1) && ((cond2 && type == 'r') || type == 'R'))
+				tab[x][y] = c;
 		}
 	}
 	return 0;
