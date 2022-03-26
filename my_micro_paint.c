@@ -21,7 +21,7 @@ int draw(void) {
 		return -1;
 	for (int x = 0; x < h; x++) {
 		for (int y = 0; y < w; y++) {
-			bool cond1 = !(x < xs || (xs + xw) < x || y < ys  || (ys + yh) < y);
+			bool cond1 = !(x < xs || (xs + xw) < x || y < ys || (ys + yh) < y);
 			bool cond2 = x - xs < 1 || (xs + xw) - x < 1 || y - ys < 1 || (ys + yh) - y < 1;
 			if ((cond1) && ((cond2 && type == 'r') || type == 'R'))
 				tab[x][y] = c;
